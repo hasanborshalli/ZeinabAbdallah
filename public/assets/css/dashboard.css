@@ -1,0 +1,383 @@
+/* =========================================================
+   Youphoto — Admin dashboard
+   Bootstrap dashboard example, restyled with brand accent
+   ========================================================= */
+
+:root {
+    --admin-gold: #af8656;
+    --admin-gold-dark: #8a6a3f;
+    --admin-ink: #2e2924;
+}
+
+body {
+    background-color: #f7f5f2;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--admin-gold);
+}
+
+.nav-pills .nav-link:not(.active):hover {
+    background-color: rgba(175, 134, 86, 0.1);
+    color: var(--admin-ink) !important;
+}
+
+.navbar-brand img {
+    object-fit: cover;
+}
+
+/* On mobile the sidebar's real content is the offcanvas menu (fixed
+   position, hidden off-screen by default) — the column itself must stay
+   auto-height there, or it renders as an empty full-screen block pushing
+   all page content down. Full-height sticky sidebar is a desktop-only look. */
+.admin-sidebar-col {
+    height: auto;
+}
+
+@media (min-width: 768px) {
+    .admin-sidebar-col {
+        height: 100vh;
+    }
+}
+
+.btn-outline-danger:hover {
+    color: #fff;
+}
+
+.admin-main {
+    padding: 2rem 1.75rem 3rem;
+}
+
+.admin-page-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.stat-card {
+    background-color: #fff;
+    border: 1px solid #ece4d8;
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+}
+
+.stat-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: rgba(175, 134, 86, 0.12);
+    color: var(--admin-gold-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.stat-card-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--admin-ink);
+    line-height: 1.2;
+}
+
+.stat-card-label {
+    font-size: 0.85rem;
+    color: #7a7167;
+}
+
+.admin-panel {
+    background-color: #fff;
+    border: 1px solid #ece4d8;
+    border-radius: 10px;
+    padding: 1.75rem;
+}
+
+.admin-panel h5 {
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #9a9188;
+}
+
+.empty-state i {
+    font-size: 2rem;
+    color: var(--admin-gold);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.btn-admin-gold {
+    background-color: var(--admin-gold);
+    border-color: var(--admin-gold);
+    color: #fff;
+}
+
+.btn-admin-gold:hover {
+    background-color: var(--admin-gold-dark);
+    border-color: var(--admin-gold-dark);
+    color: #fff;
+}
+
+.category-card + .category-card {
+    margin-top: 1.5rem;
+}
+
+.category-card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ece4d8;
+}
+
+.category-icon-badge {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: rgba(175, 134, 86, 0.12);
+    color: var(--admin-gold-dark);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.admin-table thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9a9188;
+    font-weight: 600;
+    border-bottom-width: 1px;
+}
+
+.admin-table td {
+    vertical-align: middle;
+}
+
+.form-section-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--admin-gold-dark);
+    margin-bottom: 1rem;
+}
+
+.form-section + .form-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #ece4d8;
+}
+
+.icon-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-picker-row select {
+    max-width: 320px;
+}
+
+.danger-zone {
+    border: 1px solid #f3c6c6;
+    background-color: #fff8f8;
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.danger-zone h5 {
+    color: #b02a37;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+}
+
+.gallery-thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ece4d8;
+}
+
+.gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-thumb-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(176, 42, 55, 0.9);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.gallery-thumb:hover .gallery-thumb-remove {
+    opacity: 1;
+}
+
+.theme-thumb-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+    color: #fff;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), transparent);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =========================================================
+   My Schedule (FullCalendar)
+   ========================================================= */
+#scheduleCalendar {
+    --fc-button-bg-color: var(--admin-gold);
+    --fc-button-border-color: var(--admin-gold);
+    --fc-button-hover-bg-color: var(--admin-gold-dark);
+    --fc-button-hover-border-color: var(--admin-gold-dark);
+    --fc-button-active-bg-color: var(--admin-gold-dark);
+    --fc-button-active-border-color: var(--admin-gold-dark);
+    --fc-today-bg-color: rgba(175, 134, 86, 0.1);
+    --fc-border-color: #ece4d8;
+    --fc-neutral-bg-color: #faf7f3;
+    --fc-list-event-hover-bg-color: rgba(175, 134, 86, 0.08);
+}
+
+#scheduleCalendar .fc .fc-toolbar-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+#scheduleCalendar .fc-event,
+#scheduleCalendar .fc-event .fc-event-main {
+    cursor: default;
+}
+
+#scheduleCalendar .fc-daygrid-event {
+    font-size: 0.78rem;
+    padding: 1px 4px;
+}
+
+/* List view — the primary mobile view */
+#scheduleCalendar .fc-list-event-title {
+    font-weight: 600;
+}
+
+#scheduleCalendar .fc-list-event-time {
+    color: #7a7167;
+    white-space: nowrap;
+}
+
+#scheduleCalendar .fc-list-day-cushion {
+    background: var(--fc-neutral-bg-color);
+}
+
+.sched-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-inline-end: 0.35rem;
+}
+
+@media (max-width: 767.98px) {
+    .schedule-panel {
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+
+    #scheduleCalendar .fc {
+        font-size: 0.95rem;
+    }
+
+    #scheduleCalendar .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 0.85rem;
+        gap: 0.5rem 0.75rem;
+    }
+
+    #scheduleCalendar .fc-footer-toolbar.fc-toolbar {
+        margin-top: 0.85rem;
+        justify-content: center;
+    }
+
+    #scheduleCalendar .fc .fc-toolbar-title {
+        font-size: 1.05rem;
+    }
+
+    #scheduleCalendar .fc .fc-button {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    /* Roomy, readable, tappable rows */
+    #scheduleCalendar .fc-list-event td {
+        padding: 0.8rem 0.65rem;
+    }
+
+    #scheduleCalendar .fc-list-event-title {
+        font-size: 0.98rem;
+        line-height: 1.35;
+        white-space: normal;
+    }
+
+    #scheduleCalendar .fc-list-event-time {
+        font-size: 0.82rem;
+    }
+
+    #scheduleCalendar .fc-list-day-cushion {
+        padding: 0.65rem;
+        font-size: 0.92rem;
+        font-weight: 600;
+    }
+
+    /* Month grid, if switched to it on a phone */
+    #scheduleCalendar .fc-daygrid-day-number {
+        font-size: 0.85rem;
+    }
+
+    #scheduleCalendar .fc-daygrid-event {
+        white-space: normal;
+        font-size: 0.72rem;
+        line-height: 1.2;
+    }
+}
+
+@media (max-width: 400px) {
+    #scheduleCalendar .fc-toolbar.fc-header-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}
