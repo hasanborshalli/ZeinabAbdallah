@@ -1,4 +1,4 @@
-<x-alayout title="My Schedule">
+<x-admin.alayout title="My Schedule">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
@@ -81,4 +81,4 @@
         </script>
     </x-slot:scripts>
 
-</x-alayout>
+</x-admin.alayout>

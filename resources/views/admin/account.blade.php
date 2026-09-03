@@ -1,8 +1,8 @@
 @php
-    $user = auth()->user();
+$user = auth()->user();
 @endphp
 
-<x-alayout title="Account">
+<x-admin.alayout title="Account">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="mb-4">
@@ -11,9 +11,9 @@
         </div>
 
         @if (session('success'))
-            <div class="alert alert-success" role="alert">
-                {{ session('success') }}
-            </div>
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
         @endif
 
         <div class="admin-panel mb-4">
@@ -23,16 +23,18 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="name" class="form-label small fw-semibold">Name</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $user->name) }}" required>
+                        <input type="text" name="name" id="name" class="form-control"
+                            value="{{ old('name', $user->name) }}" required>
                         @error('name')
-                            <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-6">
                         <label for="email" class="form-label small fw-semibold">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                        <input type="email" name="email" id="email" class="form-control"
+                            value="{{ old('email', $user->email) }}" required>
                         @error('email')
-                            <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -52,21 +54,24 @@
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label for="current_password" class="form-label small fw-semibold">Current Password</label>
-                        <input type="password" name="current_password" id="current_password" class="form-control" required>
+                        <input type="password" name="current_password" id="current_password" class="form-control"
+                            required>
                         @error('current_password')
-                            <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-4">
                         <label for="password" class="form-label small fw-semibold">New Password</label>
                         <input type="password" name="password" id="password" class="form-control" required>
                         @error('password')
-                            <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="password_confirmation" class="form-label small fw-semibold">Confirm New Password</label>
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+                        <label for="password_confirmation" class="form-label small fw-semibold">Confirm New
+                            Password</label>
+                        <input type="password" name="password_confirmation" id="password_confirmation"
+                            class="form-control" required>
                     </div>
                 </div>
                 <div class="form-text mt-2">At least 8 characters.</div>
@@ -80,4 +85,4 @@
         </div>
     </main>
 
-</x-alayout>
+</x-admin.alayout>

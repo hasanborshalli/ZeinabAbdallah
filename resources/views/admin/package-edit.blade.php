@@ -1,4 +1,4 @@
-<x-alayout title="Edit Package">
+<x-admin.alayout title="Edit Package">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="d-flex align-items-center gap-3 mb-4">
@@ -29,25 +29,16 @@
             <p class="text-muted small mb-3">
                 Deleting this package removes it and its features permanently. This cannot be undone.
             </p>
-            <button
-                type="button"
-                class="btn btn-outline-danger"
-                data-bs-toggle="modal"
-                data-bs-target="#deletePackageModal"
-                data-delete-url="{{ route('admin.packages.delete', $package) }}"
-                data-package-name="{{ $package->name }}"
-            >
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                data-bs-target="#deletePackageModal" data-delete-url="{{ route('admin.packages.delete', $package) }}"
+                data-package-name="{{ $package->name }}">
                 <i class="bi bi-trash me-1"></i> Delete "{{ $package->name }}"
             </button>
         </div>
 
-        <x-modal
-            id="deletePackageModal"
-            title="Delete Package"
-            message="This also removes its features permanently. This cannot be undone."
-            form-id="deletePackageForm"
-            name-id="deletePackageName"
-        />
+        <x-modal id="deletePackageModal" title="Delete Package"
+            message="This also removes its features permanently. This cannot be undone." form-id="deletePackageForm"
+            name-id="deletePackageName" />
     </main>
 
-</x-alayout>
+</x-admin.alayout>

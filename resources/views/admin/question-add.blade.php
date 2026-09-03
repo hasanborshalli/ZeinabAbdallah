@@ -1,4 +1,4 @@
-<x-alayout title="Add Question">
+<x-admin.alayout title="Add Question">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="d-flex align-items-center gap-3 mb-4">
@@ -23,4 +23,4 @@
         </form>
     </main>
 
-</x-alayout>
+</x-admin.alayout>

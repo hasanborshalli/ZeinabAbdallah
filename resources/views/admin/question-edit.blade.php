@@ -1,4 +1,4 @@
-<x-alayout title="Edit Question">
+<x-admin.alayout title="Edit Question">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="d-flex align-items-center gap-3 mb-4">
@@ -27,25 +27,15 @@
             <p class="text-muted small mb-3">
                 Deleting this question removes it from the homepage FAQ section permanently. This cannot be undone.
             </p>
-            <button
-                type="button"
-                class="btn btn-outline-danger"
-                data-bs-toggle="modal"
-                data-bs-target="#deleteQuestionModal"
-                data-delete-url="{{ route('admin.questions.delete', $question) }}"
-                data-question-name="{{ \Illuminate\Support\Str::limit($question->question, 60) }}"
-            >
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                data-bs-target="#deleteQuestionModal" data-delete-url="{{ route('admin.questions.delete', $question) }}"
+                data-question-name="{{ \Illuminate\Support\Str::limit($question->question, 60) }}">
                 <i class="bi bi-trash me-1"></i> Delete This Question
             </button>
         </div>
 
-        <x-modal
-            id="deleteQuestionModal"
-            title="Delete Question"
-            message="This cannot be undone."
-            form-id="deleteQuestionForm"
-            name-id="deleteQuestionName"
-        />
+        <x-modal id="deleteQuestionModal" title="Delete Question" message="This cannot be undone."
+            form-id="deleteQuestionForm" name-id="deleteQuestionName" />
     </main>
 
-</x-alayout>
+</x-admin.alayout>

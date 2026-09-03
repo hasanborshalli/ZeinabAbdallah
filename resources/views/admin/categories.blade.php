@@ -1,4 +1,4 @@
-<x-alayout title="Categories & Packages">
+<x-admin.alayout title="Categories & Packages">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
@@ -27,21 +27,13 @@
         </div>
         @endforelse
 
-        <x-modal
-            id="deleteCategoryModal"
-            title="Delete Category"
+        <x-modal id="deleteCategoryModal" title="Delete Category"
             message="This also removes its packages, notes, and photos permanently. This cannot be undone."
-            form-id="deleteCategoryForm"
-            name-id="deleteCategoryName"
-        />
+            form-id="deleteCategoryForm" name-id="deleteCategoryName" />
 
-        <x-modal
-            id="deletePackageModal"
-            title="Delete Package"
-            message="This also removes its features permanently. This cannot be undone."
-            form-id="deletePackageForm"
-            name-id="deletePackageName"
-        />
+        <x-modal id="deletePackageModal" title="Delete Package"
+            message="This also removes its features permanently. This cannot be undone." form-id="deletePackageForm"
+            name-id="deletePackageName" />
     </main>
 
-</x-alayout>
+</x-admin.alayout>

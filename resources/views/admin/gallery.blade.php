@@ -1,4 +1,4 @@
-<x-alayout title="Photo Gallery">
+<x-admin.alayout title="Photo Gallery">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
@@ -28,13 +28,8 @@
         </div>
         @endforelse
 
-        <x-modal
-            id="deleteImageModal"
-            title="Delete Photo"
-            message="This cannot be undone."
-            form-id="deleteImageForm"
-            name-id="deleteImageName"
-        />
+        <x-modal id="deleteImageModal" title="Delete Photo" message="This cannot be undone." form-id="deleteImageForm"
+            name-id="deleteImageName" />
     </main>
 
-</x-alayout>
+</x-admin.alayout>

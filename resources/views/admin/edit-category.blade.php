@@ -1,4 +1,4 @@
-<x-alayout title="Edit Category">
+<x-admin.alayout title="Edit Category">
 
     <main class="col-md-9 col-lg-10 admin-main">
         <div class="d-flex align-items-center gap-3 mb-4">
@@ -31,25 +31,17 @@
                 Deleting this category also removes its packages and past-work photos from the public catalog. This
                 cannot be undone.
             </p>
-            <button
-                type="button"
-                class="btn btn-outline-danger"
-                data-bs-toggle="modal"
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                 data-bs-target="#deleteCategoryModal"
                 data-delete-url="{{ route('admin.categories.delete', $category) }}"
-                data-category-name="{{ $category->title }}"
-            >
+                data-category-name="{{ $category->title }}">
                 <i class="bi bi-trash me-1"></i> Delete "{{ $category->title }}"
             </button>
         </div>
 
-        <x-modal
-            id="deleteCategoryModal"
-            title="Delete Category"
+        <x-modal id="deleteCategoryModal" title="Delete Category"
             message="This also removes its packages, notes, and photos permanently. This cannot be undone."
-            form-id="deleteCategoryForm"
-            name-id="deleteCategoryName"
-        />
+            form-id="deleteCategoryForm" name-id="deleteCategoryName" />
     </main>
 
-</x-alayout>
+</x-admin.alayout>
