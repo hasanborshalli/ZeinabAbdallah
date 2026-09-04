@@ -11,7 +11,7 @@
 
         <div class="row g-3 mb-4">
             @foreach ($stats as $stat)
-            <div class="col-6 col-lg-3">
+            <div class="col-12 col-sm-6 col-lg-3">
                 <div class="stat-card">
                     <span class="stat-card-icon"><i class="bi {{ $stat['icon'] }}"></i></span>
                     <div>
