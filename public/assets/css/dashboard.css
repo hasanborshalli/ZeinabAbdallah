@@ -64,6 +64,11 @@ body {
     height: 100%;
 }
 
+/* let the text column shrink inside the flex row instead of overflowing */
+.stat-card > div {
+    min-width: 0;
+}
+
 .stat-card-icon {
     width: 52px;
     height: 52px;
@@ -82,11 +87,36 @@ body {
     font-weight: 700;
     color: var(--admin-ink);
     line-height: 1.2;
+    overflow-wrap: anywhere;
 }
 
 .stat-card-label {
     font-size: 0.85rem;
     color: #7a7167;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+    .stat-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.65rem;
+        padding: 1rem;
+    }
+
+    .stat-card-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+
+    .stat-card-value {
+        font-size: 1.3rem;
+    }
+
+    .stat-card-label {
+        font-size: 0.8rem;
+    }
 }
 
 .admin-panel {
