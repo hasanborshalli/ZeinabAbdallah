@@ -1,5 +1,5 @@
 @php
-    $tr = fn ($model, $field) => app()->getLocale() === 'ar' ? $model->{$field . '_ar'} : $model->$field;
+$tr = fn ($model, $field) => app()->getLocale() === 'ar' ? $model->{$field . '_ar'} : $model->$field;
 @endphp
 
 <x-layout>
@@ -14,8 +14,10 @@
         </div>
 
         <div class="scroll-cue">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M12 4v16m0 0l-6-6m6 6l6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path d="M12 4v16m0 0l-6-6m6 6l6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
             </svg>
         </div>
     </section>
@@ -25,14 +27,10 @@
         <div class="container-max">
             <div class="row align-items-center gy-5">
                 <div class="col-lg-5">
-                    <div class="about-photo-placeholder">
-                        <div>
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M4 7h3l2-2h6l2 2h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.3"/>
-                                <circle cx="12" cy="13" r="3.5" stroke="currentColor" stroke-width="1.3"/>
-                            </svg>
-                            <div>{{ __('site.about.image_caption') }}</div>
-                        </div>
+                    <div class="about-photo-wrap">
+                        <img src="{{ asset('assets/images/zeinab-abedallah.jpeg') }}"
+                            alt="{{ __('site.about.image_caption') }}" class="about-photo" width="800" height="1484"
+                            loading="lazy">
                     </div>
                 </div>
                 <div class="col-lg-7">
@@ -67,15 +65,16 @@
 
             <div class="row g-3 g-md-4">
                 @foreach ($sessions as $category)
-                    <div class="col-6 col-lg-3">
-                        <a href="/catalog#cat-{{ $category->id }}" class="session-card" style="background-image: url('{{ $category->main_image }}');">
-                            <div class="session-card-body">
-                                <i class="session-card-icon bi {{ $category->icon }}"></i>
-                                <div class="session-card-title">{{ $tr($category, 'title') }}</div>
-                                <span class="session-card-link">{{ __('site.sessions.cta') }} &rarr;</span>
-                            </div>
-                        </a>
-                    </div>
+                <div class="col-6 col-lg-3">
+                    <a href="/catalog#cat-{{ $category->id }}" class="session-card"
+                        style="background-image: url('{{ $category->main_image }}');">
+                        <div class="session-card-body">
+                            <i class="session-card-icon bi {{ $category->icon }}"></i>
+                            <div class="session-card-title">{{ $tr($category, 'title') }}</div>
+                            <span class="session-card-link">{{ __('site.sessions.cta') }} &rarr;</span>
+                        </div>
+                    </a>
+                </div>
                 @endforeach
             </div>
         </div>
@@ -92,9 +91,9 @@
 
             <div class="portfolio-grid">
                 @foreach ($portfolio as $item)
-                    <div class="portfolio-item {{ $item['tall'] ? 'tall' : '' }}">
-                        <img src="{{ $item['image'] }}" alt="{{ __('site.portfolio.heading') }}" loading="lazy">
-                    </div>
+                <div class="portfolio-item {{ $item['tall'] ? 'tall' : '' }}">
+                    <img src="{{ $item['image'] }}" alt="{{ __('site.portfolio.heading') }}" loading="lazy">
+                </div>
                 @endforeach
             </div>
 
@@ -115,13 +114,13 @@
 
             <div class="row g-4">
                 @foreach (__('site.experience.steps') as $step)
-                    <div class="col-6 col-lg-3">
-                        <div class="experience-step">
-                            <div class="experience-step-number">{{ $step['number'] }}</div>
-                            <div class="experience-step-title">{{ $step['title'] }}</div>
-                            <p class="experience-step-text">{{ $step['text'] }}</p>
-                        </div>
+                <div class="col-6 col-lg-3">
+                    <div class="experience-step">
+                        <div class="experience-step-number">{{ $step['number'] }}</div>
+                        <div class="experience-step-title">{{ $step['title'] }}</div>
+                        <p class="experience-step-text">{{ $step['text'] }}</p>
                     </div>
+                </div>
                 @endforeach
             </div>
         </div>
@@ -164,14 +163,14 @@
 
             <div class="row g-4">
                 @foreach (__('site.reviews.items') as $review)
-                    <div class="col-md-6 col-lg-3">
-                        <div class="review-card">
-                            <span class="review-quote-mark">&ldquo;</span>
-                            <p class="review-text">{{ $review['text'] }}</p>
-                            <p class="review-name">{{ $review['name'] }}</p>
-                            <span class="review-role">{{ $review['role'] }}</span>
-                        </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="review-card">
+                        <span class="review-quote-mark">&ldquo;</span>
+                        <p class="review-text">{{ $review['text'] }}</p>
+                        <p class="review-name">{{ $review['name'] }}</p>
+                        <span class="review-role">{{ $review['role'] }}</span>
                     </div>
+                </div>
                 @endforeach
             </div>
         </div>

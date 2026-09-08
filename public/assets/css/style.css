@@ -375,10 +375,15 @@ a {
    ========================================================= */
 .about-photo-wrap {
     position: relative;
+    max-width: 420px;
+    margin-inline: auto;
 }
 
+/* full portrait, no cropping, on every screen size */
 .about-photo {
+    display: block;
     width: 100%;
+    height: auto;
     border-radius: var(--radius);
     box-shadow: 0 20px 40px rgba(46, 41, 36, 0.15);
 }

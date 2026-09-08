@@ -23,7 +23,7 @@ return [
         'eyebrow' => 'Meet Your Photographer',
         'heading' => 'Hello, I\'m Zeinab 🤍',
         'text' => 'I\'m a photographer specializing in newborn, baby, maternity, and family photography. My goal is to create warm and elegant photographs that preserve your most precious memories for years to come.',
-        'image_caption' => 'Photographer portrait — to be added',
+        'image_caption' => 'Zeinab Abedallah, photographer',
         'offer_eyebrow' => 'What I Offer',
         'offer_heading' => 'Your Story, Beautifully Captured',
         'offer_text' => 'From your baby\'s first tiny moments to birthdays, milestones, and family memories, every session is thoughtfully created to preserve the love, connection, and joy you\'ll want to remember forever.',
