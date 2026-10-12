@@ -7,7 +7,7 @@
             </a>
             <div>
                 <h1 class="admin-page-title h4 mb-0">Add Question</h1>
-                <p class="text-muted mb-0">Add a new question to the homepage FAQ section.</p>
+                <p class="text-muted mb-0">Add a new question to a session's FAQ section.</p>
             </div>
         </div>
 

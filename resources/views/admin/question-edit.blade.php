@@ -25,7 +25,7 @@
         <div class="danger-zone">
             <h5>Danger Zone</h5>
             <p class="text-muted small mb-3">
-                Deleting this question removes it from the homepage FAQ section permanently. This cannot be undone.
+                Deleting this question removes it from that session's FAQ section permanently. This cannot be undone.
             </p>
             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                 data-bs-target="#deleteQuestionModal" data-delete-url="{{ route('admin.questions.delete', $question) }}"

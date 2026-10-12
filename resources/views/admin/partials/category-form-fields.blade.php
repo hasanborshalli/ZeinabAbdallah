@@ -1,25 +1,10 @@
 @php
 $category = $category ?? null;
 
-$icons = [
-'bi-moon-stars-fill' => 'Moon & Stars',
-'bi-cake2' => 'Cake',
-'bi-balloon-heart-fill' => 'Balloon Heart',
-'bi-stars' => 'Stars',
-'bi-heart-fill' => 'Heart',
-'bi-camera-fill' => 'Camera',
-'bi-gift-fill' => 'Gift',
-'bi-flower1' => 'Flower',
-'bi-emoji-smile-fill' => 'Smiley',
-'bi-palette-fill' => 'Palette',
-'bi-people-fill' => 'People',
-];
-
 $field = fn (string $name) => old($name, data_get($category, $name, ''));
-$selectedIcon = old('icon', data_get($category, 'icon', array_key_first($icons)));
 
 $existingNotes = old('notes', $category?->notes?->mapWithKeys(fn ($note) => [
-    $note->id => ['note' => $note->note, 'note_ar' => $note->note_ar],
+$note->id => ['note' => $note->note, 'note_ar' => $note->note_ar],
 ])->all() ?: []);
 $existingNotes = $existingNotes ?: [['note' => '', 'note_ar' => '']];
 $nextNoteIndex = $existingNotes ? max(array_keys($existingNotes)) + 1 : 0;
@@ -41,6 +26,36 @@ $nextNoteIndex = $existingNotes ? max(array_keys($existingNotes)) + 1 : 0;
             <input type="text" name="title_ar" id="title_ar" class="form-control" dir="rtl"
                 value="{{ $field('title_ar') }}">
             @error('title_ar')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="col-md-12">
+            <label for="slug" class="form-label small fw-semibold">URL Slug</label>
+            <input type="text" name="slug" id="slug" class="form-control" value="{{ $field('slug') }}" required>
+            <div class="form-text">e.g.
+                youphoto.lb/sessions/<strong>newborn-sessions</strong>. Lowercase letters, numbers, and hyphens
+                only</div>
+            @error('slug')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="col-md-6">
+            <label for="small_description" class="form-label small fw-semibold">Short Caption (English)</label>
+            <input type="text" name="small_description" id="small_description" class="form-control"
+                value="{{ $field('small_description') }}">
+            <div class="form-text">Short tagline shown under the title on the homepage session card, e.g. "The
+                beginning of a beautiful story".</div>
+            @error('small_description')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="col-md-6">
+            <label for="small_description_ar" class="form-label small fw-semibold">Short Caption (Arabic)</label>
+            <input type="text" name="small_description_ar" id="small_description_ar" class="form-control" dir="rtl"
+                value="{{ $field('small_description_ar') }}">
+            @error('small_description_ar')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
@@ -78,22 +93,19 @@ $nextNoteIndex = $existingNotes ? max(array_keys($existingNotes)) + 1 : 0;
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-    </div>
-</div>
 
-<div class="form-section">
-    <p class="form-section-title">Icon</p>
-    <div class="icon-picker-row">
-        <span class="category-icon-badge"><i id="iconPreview" class="bi {{ $selectedIcon }}"></i></span>
-        <select name="icon" class="form-select" data-icon-picker="iconPreview">
-            @foreach ($icons as $value => $label)
-            <option value="{{ $value }}" @selected($selectedIcon===$value)>{{ $label }}</option>
-            @endforeach
-        </select>
+        <div class="col-md-12">
+            <div class="form-check">
+                <input type="checkbox" name="gift" id="gift" class="form-check-input" value="1"
+                    {{ old('gift', data_get($category, 'gift', false)) ? 'checked' : '' }}>
+                <label for="gift" class="form-check-label small fw-semibold">Show Gift Voucher Section</label>
+            </div>
+            <div class="form-text">When enabled, the gift voucher section is shown on this session's page.</div>
+            @error('gift')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
     </div>
-    @error('icon')
-    <div class="text-danger">{{ $message }}</div>
-    @enderror
 </div>
 
 <div class="form-section">
@@ -108,6 +120,11 @@ $nextNoteIndex = $existingNotes ? max(array_keys($existingNotes)) + 1 : 0;
 
     <input type="file" name="main_image" class="form-control" accept="image/*">
     <div class="form-text">The featured image used for this category's card on the homepage and catalog page.</div>
+    <div class="form-text">
+        <strong>Recommended size: 1600 × 900px (16:9, landscape).</strong>
+        This card is shown wide and cropped to fill its box, so keep the main subject centered — it gets
+        cropped tighter on mobile than on desktop.
+    </div>
     @error('main_image')
     <div class="text-danger">{{ $message }}</div>
     @enderror
@@ -142,7 +159,8 @@ $nextNoteIndex = $existingNotes ? max(array_keys($existingNotes)) + 1 : 0;
         @endforeach
     </div>
 
-    <button type="button" id="addNoteRow" class="btn btn-sm btn-outline-secondary" data-next-index="{{ $nextNoteIndex }}">
+    <button type="button" id="addNoteRow" class="btn btn-sm btn-outline-secondary"
+        data-next-index="{{ $nextNoteIndex }}">
         <i class="bi bi-plus-lg me-1"></i> Add Note
     </button>
 

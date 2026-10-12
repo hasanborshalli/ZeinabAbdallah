@@ -23,10 +23,10 @@
         <div class="text-center mb-4">
             <img src="/assets/images/zeinab_abdallah_logo.jpg" alt="Youphoto" style="height: 64px; border-radius: 50%; object-fit: cover;">
             <h1 class="font-heading mt-3 mb-1" style="font-size: 1.6rem;">Youphoto</h1>
-            <p class="mb-0" style="color: var(--color-ink-soft); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;">Admin Login</p>
+            <p class="mb-0" style="color: var(--color-muted); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;">Admin Login</p>
         </div>
 
-        <div style="background-color: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 2rem;">
+        <div style="background-color: var(--color-white); border: 1px solid var(--color-sand); border-radius: var(--radius); padding: 2rem;">
 
             @if ($errors->any())
                 <div class="alert alert-danger py-2 small mb-3">
@@ -35,6 +35,7 @@
             @endif
 
             <form method="POST" action="{{ route('login.action') }}">
+                @csrf
                 <div class="mb-3">
                     <label for="email" class="form-label small fw-semibold">Email</label>
                     <input
@@ -64,7 +65,7 @@
                     <label for="remember" class="form-check-label small">Remember me</label>
                 </div>
 
-                <button type="submit" class="btn-gold w-100 justify-content-center">
+                <button type="submit" class="btn-pill btn-pill-solid w-100">
                     Log In
                 </button>
             </form>
@@ -72,7 +73,7 @@
         </div>
 
         <div class="text-center mt-4">
-            <a href="{{ route('home') }}" class="small" style="color: var(--color-ink-soft);">
+            <a href="{{ route('home') }}" class="small" style="color: var(--color-muted);">
                 <i class="bi bi-arrow-left me-1"></i> Back to main site
             </a>
         </div>

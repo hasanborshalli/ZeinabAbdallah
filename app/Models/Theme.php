@@ -10,8 +10,4 @@ class Theme extends Model
     public function category(){
       return $this->belongsTo(Category::class);
     }
-
-    public function bookings(){
-        return $this->belongsToMany(Booking::class);
-    }
 }

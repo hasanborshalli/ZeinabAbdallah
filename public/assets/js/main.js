@@ -1,294 +1,267 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var navbar = document.querySelector('.site-navbar');
-
-    if (navbar && !navbar.classList.contains('navbar-solid')) {
-        var toggleScrolled = function () {
-            if (window.scrollY > 40) {
-                navbar.classList.add('is-scrolled');
-            } else {
-                navbar.classList.remove('is-scrolled');
-            }
-        };
-
-        toggleScrolled();
-        window.addEventListener('scroll', toggleScrolled);
-    }
-
-    var navCollapse = document.getElementById('mainNav');
-    if (navCollapse) {
-        navCollapse.querySelectorAll('.nav-link').forEach(function (link) {
-            link.addEventListener('click', function () {
-                if (navCollapse.classList.contains('show') && window.bootstrap) {
-                    window.bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
-                }
-            });
-        });
-    }
-
-    initCatalogFilters();
-    initBookingForm();
+    initSiteNav();
+    initSimpleBookingForm();
+    initSessionInfoForm();
+    initLightbox();
+    initFeedbacksSlider();
 });
 
-function initBookingForm() {
-    var sessionSelect = document.getElementById('sessionType');
-    var packageSelect = document.getElementById('packageSelect');
-    var packageFeatures = document.getElementById('packageFeatures');
-    var themeChoices = document.getElementById('themeChoices');
-    var themeGroup = document.getElementById('themeGroup');
-    var themeHint = document.getElementById('themeHint');
-    var dateInput = document.getElementById('date');
-    var timeSelect = document.getElementById('time');
-    var fieldGroups = document.querySelectorAll('.booking-fields');
-
-    if (!sessionSelect || !packageSelect) {
+// The per-session "tell us more" form sent via a private link once a booking
+// is confirmed over WhatsApp (/sessions/{category}/form). Every field that
+// should be included carries a data-label; this walks them in DOM order,
+// skips anything left empty, and opens WhatsApp with the rest — no fields
+// are hardcoded here, so a future session's field set just works.
+function initSessionInfoForm() {
+    var form = document.getElementById('sessionInfoForm');
+    if (!form) {
         return;
     }
 
-    var currentPackages = [];
+    var whatsappUrl = form.dataset.whatsappUrl;
+    var messageIntro = form.dataset.messageIntro || '';
+    var status = form.querySelector('[data-booking-status]');
 
-    function renderFeatures(packageId) {
-        if (!packageFeatures) {
-            return;
+    var resetStatus = function () {
+        if (status) {
+            status.textContent = status.dataset.defaultText;
         }
+    };
 
-        var pkg = currentPackages.find(function (p) { return String(p.id) === String(packageId); });
-        packageFeatures.innerHTML = '';
-
-        if (!pkg || !pkg.features || !pkg.features.length) {
-            return;
-        }
-
-        var list = document.createElement('ul');
-        list.className = 'small text-muted mb-0 ps-3';
-        pkg.features.forEach(function (feature) {
-            var item = document.createElement('li');
-            item.textContent = feature;
-            list.appendChild(item);
-        });
-        packageFeatures.appendChild(list);
-    }
-
-    function currentThemeLimit() {
-        var pkg = currentPackages.find(function (p) { return String(p.id) === String(packageSelect.value); });
-        return pkg ? (parseInt(pkg.theme_limit, 10) || 0) : 0;
-    }
-
-    // Show the theme picker only when the chosen package includes theme choice,
-    // and stop the customer selecting more than that package's limit.
-    function applyThemeLimit() {
-        if (!themeChoices || !themeGroup) {
-            return;
-        }
-
-        var boxes = Array.prototype.slice.call(themeChoices.querySelectorAll('input[type="checkbox"]'));
-        var limit = currentThemeLimit();
-
-        if (!boxes.length || limit < 1) {
-            themeGroup.hidden = true;
-            boxes.forEach(function (box) {
-                box.checked = false;
-                box.disabled = false;
-                box.closest('.theme-choice-item').classList.remove('is-disabled');
-            });
-            return;
-        }
-
-        themeGroup.hidden = false;
-
-        var checkedCount = boxes.filter(function (box) { return box.checked; }).length;
-
-        boxes.forEach(function (box) {
-            box.disabled = !box.checked && checkedCount >= limit;
-            box.closest('.theme-choice-item').classList.toggle('is-disabled', box.disabled);
-        });
-
-        if (themeHint) {
-            themeHint.textContent = limit === 1
-                ? (themeHint.dataset.limitOne || 'You can choose 1 theme.')
-                : (themeHint.dataset.limitMany || 'You can choose up to :count themes.').replace(':count', limit);
-        }
-    }
-
-    function refreshAvailability() {
-        if (!timeSelect || !dateInput || !dateInput.value || !packageSelect.value) {
-            return;
-        }
-
-        var previousValue = timeSelect.value;
-        var placeholderText = timeSelect.dataset.placeholder || 'Select a time';
-
-        fetch('/availability?package_id=' + encodeURIComponent(packageSelect.value) + '&date=' + encodeURIComponent(dateInput.value))
-            .then(function (res) { return res.json(); })
-            .then(function (slots) {
-                timeSelect.innerHTML = '';
-
-                var placeholder = document.createElement('option');
-                placeholder.value = '';
-                placeholder.disabled = true;
-                placeholder.selected = true;
-                placeholder.textContent = placeholderText;
-                timeSelect.appendChild(placeholder);
-
-                slots.forEach(function (slot) {
-                    var opt = document.createElement('option');
-                    opt.value = slot.time;
-                    opt.textContent = slot.available ? slot.time : slot.time + ' — booked';
-                    opt.disabled = !slot.available;
-                    if (slot.available && slot.time === previousValue) {
-                        opt.selected = true;
-                        placeholder.selected = false;
-                    }
-                    timeSelect.appendChild(opt);
-                });
-            })
-            .catch(function () {});
-    }
-
-    if (timeSelect) {
-        timeSelect.dataset.placeholder = timeSelect.dataset.placeholder
-            || (timeSelect.querySelector('option[value=""]') ? timeSelect.querySelector('option[value=""]').textContent : 'Select a time');
-    }
-
-    sessionSelect.addEventListener('change', function () {
-        var option = sessionSelect.options[sessionSelect.selectedIndex];
-        var template = option.dataset.template || 'generic';
-
-        fieldGroups.forEach(function (group) {
-            group.hidden = group.dataset.template !== template;
-        });
-
-        var themes = [];
-
-        try {
-            currentPackages = JSON.parse(option.dataset.packages || '[]');
-        } catch (e) {
-            currentPackages = [];
-        }
-
-        try {
-            themes = JSON.parse(option.dataset.themes || '[]');
-        } catch (e) {}
-
-        packageSelect.innerHTML = '';
-        if (packageFeatures) {
-            packageFeatures.innerHTML = '';
-        }
-
-        if (!currentPackages.length) {
-            var emptyOpt = document.createElement('option');
-            emptyOpt.value = '';
-            emptyOpt.textContent = 'No packages available for this session yet';
-            emptyOpt.disabled = true;
-            emptyOpt.selected = true;
-            packageSelect.appendChild(emptyOpt);
-        } else {
-            var placeholder = document.createElement('option');
-            placeholder.value = '';
-            placeholder.disabled = true;
-            placeholder.selected = true;
-            placeholder.textContent = packageSelect.dataset.placeholder || 'Select a package';
-            packageSelect.appendChild(placeholder);
-
-            currentPackages.forEach(function (pkg) {
-                var opt = document.createElement('option');
-                opt.value = pkg.id;
-                opt.textContent = pkg.name + ' — ' + pkg.price + ' (' + pkg.duration + ')';
-                packageSelect.appendChild(opt);
-            });
-        }
-
-        if (themeChoices && themeGroup) {
-            themeChoices.innerHTML = '';
-
-            themes.forEach(function (theme) {
-                var label = document.createElement('label');
-                label.className = 'theme-choice-item';
-                label.innerHTML =
-                    '<input type="checkbox" name="themes[]" value="' + theme.id + '" class="d-none">' +
-                    '<span class="theme-choice-card">' +
-                        '<img src="' + theme.image + '" alt="' + theme.name + '" loading="lazy">' +
-                        '<span>' + theme.name + '</span>' +
-                    '</span>' +
-                    '<span class="theme-choice-check"><i class="bi bi-check-lg"></i></span>';
-                themeChoices.appendChild(label);
-            });
-
-            applyThemeLimit();
-        }
-
-        refreshAvailability();
+    form.querySelectorAll('input, textarea').forEach(function (field) {
+        field.addEventListener('input', resetStatus);
     });
 
-    packageSelect.addEventListener('change', function () {
-        renderFeatures(packageSelect.value);
-        applyThemeLimit();
-        refreshAvailability();
-    });
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
 
-    if (themeChoices) {
-        themeChoices.addEventListener('change', function (event) {
-            if (event.target && event.target.matches('input[type="checkbox"]')) {
-                applyThemeLimit();
-            }
-        });
-    }
+        var lines = messageIntro ? [messageIntro, ''] : [];
 
-    if (dateInput) {
-        dateInput.addEventListener('change', refreshAvailability);
-    }
-}
+        form.querySelectorAll('[data-label]').forEach(function (field) {
+            var label = field.dataset.label;
+            var value = '';
 
-function initCatalogFilters() {
-    var filterPills = document.querySelectorAll('.filter-pill');
-    var categories = document.querySelectorAll('.catalog-category');
-    var searchInput = document.getElementById('catalogSearch');
-    var noResults = document.getElementById('catalogNoResults');
-
-    if (!filterPills.length || !categories.length) {
-        return;
-    }
-
-    var activeFilter = 'all';
-
-    function applyFilters() {
-        var query = searchInput ? searchInput.value.trim().toLowerCase() : '';
-        var anyVisible = false;
-
-        categories.forEach(function (category) {
-            var matchesFilter = activeFilter === 'all' || category.dataset.category === activeFilter;
-            var items = category.querySelectorAll('.catalog-package-item');
-            var categoryHasMatch = false;
-
-            items.forEach(function (item) {
-                var matchesSearch = !query || item.dataset.search.indexOf(query) !== -1;
-                item.classList.toggle('d-none', !matchesSearch);
-                if (matchesSearch) {
-                    categoryHasMatch = true;
+            if (field.type === 'radio' || field.type === 'checkbox') {
+                if (!field.checked) {
+                    return;
                 }
-            });
+                value = field.dataset.valueLabel || field.value;
+            } else {
+                value = field.value.trim();
+            }
 
-            var show = matchesFilter && categoryHasMatch;
-            category.classList.toggle('d-none', !show);
-            if (show) {
-                anyVisible = true;
+            if (value) {
+                lines.push(label + ': ' + value);
             }
         });
 
-        if (noResults) {
-            noResults.classList.toggle('d-none', anyVisible);
+        var message = lines.join('\n');
+        var url = whatsappUrl + '?text=' + encodeURIComponent(message);
+
+        window.open(url, '_blank', 'noreferrer');
+
+        if (status) {
+            status.textContent = status.dataset.sentText;
         }
+    });
+}
+
+// Any <img data-lightbox> on the page opens full-size in the shared overlay
+// from layout.blade.php — used by the photo grids (home gallery, session
+// photography teaser, full session gallery).
+function initLightbox() {
+    var lightbox = document.getElementById('lightbox');
+    var triggers = document.querySelectorAll('[data-lightbox]');
+
+    if (!lightbox || !triggers.length) {
+        return;
     }
 
-    filterPills.forEach(function (pill) {
-        pill.addEventListener('click', function () {
-            activeFilter = pill.dataset.filter;
-            filterPills.forEach(function (p) { p.classList.remove('active'); });
-            pill.classList.add('active');
-            applyFilters();
+    var lightboxImg = lightbox.querySelector('.lightbox-img');
+    var closeBtn = lightbox.querySelector('[data-lightbox-close]');
+    var lastFocused = null;
+
+    var close = function () {
+        lightbox.hidden = true;
+        lightboxImg.src = '';
+        document.body.classList.remove('lightbox-open');
+        if (lastFocused) {
+            lastFocused.focus();
+        }
+    };
+
+    var open = function (trigger) {
+        lastFocused = trigger;
+        lightboxImg.src = trigger.currentSrc || trigger.src;
+        lightboxImg.alt = trigger.alt || '';
+        lightbox.hidden = false;
+        document.body.classList.add('lightbox-open');
+        closeBtn.focus();
+    };
+
+    triggers.forEach(function (trigger) {
+        trigger.style.cursor = 'zoom-in';
+        trigger.addEventListener('click', function () {
+            open(trigger);
         });
     });
 
-    if (searchInput) {
-        searchInput.addEventListener('input', applyFilters);
-    }
+    closeBtn.addEventListener('click', close);
+
+    lightbox.addEventListener('click', function (event) {
+        if (event.target === lightbox) {
+            close();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !lightbox.hidden) {
+            close();
+        }
+    });
 }
+
+// The simple name+phone booking form (/booking) — builds a WhatsApp message
+// client-side and opens it, with no server-side persistence.
+function initSimpleBookingForm() {
+    var form = document.getElementById('bookingForm');
+    if (!form) {
+        return;
+    }
+
+    var nameInput = form.querySelector('#booking-name');
+    var phoneInput = form.querySelector('#booking-phone');
+    var status = form.querySelector('[data-booking-status]');
+    var whatsappUrl = form.dataset.whatsappUrl;
+    var template = form.dataset.messageTemplate || '';
+
+    var resetStatus = function () {
+        if (status) {
+            status.textContent = status.dataset.defaultText;
+        }
+    };
+
+    [nameInput, phoneInput].forEach(function (input) {
+        if (input) {
+            input.addEventListener('input', resetStatus);
+        }
+    });
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var name = nameInput ? nameInput.value.trim() : '';
+        var phone = phoneInput ? phoneInput.value.trim() : '';
+
+        var message = template.replace(':name', name).replace(':phone', phone);
+        var url = whatsappUrl + '?text=' + encodeURIComponent(message);
+
+        window.open(url, '_blank', 'noreferrer');
+
+        if (status) {
+            status.textContent = status.dataset.sentText;
+        }
+    });
+}
+
+// Horizontal, swipeable feedbacks carousel on the home page. The track
+// scrolls natively (touch drag, trackpad, scrollbar); the arrow buttons just
+// nudge it by one card width and disable themselves at the ends. Direction
+// is scroll-left-sign-aware so it also works under dir="rtl".
+function initFeedbacksSlider() {
+    var track = document.querySelector('[data-feedbacks-track]');
+    var prevBtn = document.querySelector('[data-feedbacks-prev]');
+    var nextBtn = document.querySelector('[data-feedbacks-next]');
+
+    if (!track || !prevBtn || !nextBtn) {
+        return;
+    }
+
+    var isRtl = document.documentElement.dir === 'rtl';
+
+    var getStep = function () {
+        var slide = track.querySelector('.feedbacks-slide');
+        if (!slide) {
+            return track.clientWidth;
+        }
+        var gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+        return slide.getBoundingClientRect().width + gap;
+    };
+
+    var updateButtons = function () {
+        var maxScroll = track.scrollWidth - track.clientWidth;
+
+        if (maxScroll <= 1) {
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            return;
+        }
+
+        if (isRtl) {
+            prevBtn.disabled = track.scrollLeft >= -1;
+            nextBtn.disabled = track.scrollLeft <= -maxScroll + 1;
+        } else {
+            prevBtn.disabled = track.scrollLeft <= 1;
+            nextBtn.disabled = track.scrollLeft >= maxScroll - 1;
+        }
+    };
+
+    var scrollByStep = function (readingDirection) {
+        var amount = getStep() * readingDirection * (isRtl ? -1 : 1);
+        track.scrollBy({ left: amount, behavior: 'smooth' });
+    };
+
+    nextBtn.addEventListener('click', function () {
+        scrollByStep(1);
+    });
+
+    prevBtn.addEventListener('click', function () {
+        scrollByStep(-1);
+    });
+
+    track.addEventListener('scroll', updateButtons);
+    window.addEventListener('resize', updateButtons);
+
+    updateButtons();
+}
+
+function initSiteNav() {
+    var toggle = document.querySelector('[data-nav-toggle]');
+    var mobileNav = document.getElementById('mobileNav');
+
+    if (!toggle || !mobileNav) {
+        return;
+    }
+
+    var iconOpen = toggle.querySelector('[data-nav-icon-open]');
+    var iconClose = toggle.querySelector('[data-nav-icon-close]');
+
+    var setOpen = function (open) {
+        mobileNav.hidden = !open;
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? toggle.dataset.labelClose : toggle.dataset.labelOpen);
+
+        if (iconOpen) {
+            iconOpen.hidden = open;
+        }
+        if (iconClose) {
+            iconClose.hidden = !open;
+        }
+    };
+
+    toggle.addEventListener('click', function () {
+        setOpen(mobileNav.hidden);
+    });
+
+    mobileNav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            setOpen(false);
+        });
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !mobileNav.hidden) {
+            setOpen(false);
+        }
+    });
+}
+

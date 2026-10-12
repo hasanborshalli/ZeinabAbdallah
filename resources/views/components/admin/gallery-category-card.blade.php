@@ -1,11 +1,8 @@
 <div class="admin-panel category-card">
     <div class="category-card-head">
-        <div class="d-flex align-items-center gap-3">
-            <span class="category-icon-badge"><i class="bi {{ $category->icon }}"></i></span>
-            <div>
-                <h5 class="mb-0">{{ $category->title }}</h5>
-                <span class="text-muted small" dir="rtl">{{ $category->title_ar }}</span>
-            </div>
+        <div>
+            <h5 class="mb-0">{{ $category->title }}</h5>
+            <span class="text-muted small" dir="rtl">{{ $category->title_ar }}</span>
         </div>
         <span class="text-muted small">{{ count($category->images) }} {{
             \Illuminate\Support\Str::plural('photo',
@@ -45,4 +42,9 @@
             <i class="bi bi-upload me-1"></i> Add Photo
         </button>
     </form>
+    <div class="form-text mt-2">
+        <strong>Recommended size: 1600 × 1600px (square, 1:1).</strong>
+        These photos appear both as squares and cropped wider on different pages, so a square source with the
+        subject centered crops well everywhere, including on mobile.
+    </div>
 </div>

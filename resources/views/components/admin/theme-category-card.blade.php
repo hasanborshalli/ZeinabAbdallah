@@ -1,11 +1,8 @@
 <div class="admin-panel category-card">
     <div class="category-card-head">
-        <div class="d-flex align-items-center gap-3">
-            <span class="category-icon-badge"><i class="bi {{ $category->icon }}"></i></span>
-            <div>
-                <h5 class="mb-0">{{ $category->title }}</h5>
-                <span class="text-muted small" dir="rtl">{{ $category->title_ar }}</span>
-            </div>
+        <div>
+            <h5 class="mb-0">{{ $category->title }}</h5>
+            <span class="text-muted small" dir="rtl">{{ $category->title_ar }}</span>
         </div>
         <span class="text-muted small">{{ $category->themes->count() }} {{ \Illuminate\Support\Str::plural('theme',
             $category->themes->count()) }}</span>
@@ -43,4 +40,9 @@
             <i class="bi bi-plus-lg me-1"></i> Add Theme
         </button>
     </form>
+    <div class="form-text mt-2">
+        <strong>Recommended size: 1200 × 1600px (3:4, portrait).</strong>
+        Theme chips are always shown as tall portrait cards, so an upright photo with the subject centered
+        looks best, especially on narrow mobile screens.
+    </div>
 </div>

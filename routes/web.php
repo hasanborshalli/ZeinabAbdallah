@@ -2,9 +2,8 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\HomeImageController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\QuestionsController;
 use Illuminate\Http\Request;
@@ -19,11 +18,15 @@ use Illuminate\Support\Facades\Route;
             })->name('lang.switch');
 
             Route::get('/',[PagesController::class,'homePage'])->name('home');
-            Route::get('/catalog',[PagesController::class,'catalogPage'])->name('catalog');
+            Route::get('/gallery',[PagesController::class,'galleryIndexPage'])->name('gallery');
+            Route::get('/themes',[PagesController::class,'themesIndexPage'])->name('themes');
+            Route::get('/sessions/{category:slug}',[PagesController::class,'sessionDetailPage'])->name('sessions.show');
+            Route::get('/sessions/{category:slug}/gallery',[PagesController::class,'sessionGalleryPage'])->name('sessions.gallery');
+            Route::get('/sessions/{category:slug}/themes',[PagesController::class,'sessionThemesPage'])->name('sessions.themes');
+            Route::get('/sessions/{category:slug}/form',[PagesController::class,'sessionInfoFormPage'])->name('sessions.form');
+            Route::get('/booking',[PagesController::class,'bookingPage'])->name('booking');
             Route::get('/contact',[PagesController::class,'contactPage'])->name('contact');
-            Route::get('/faq',[PagesController::class,'faqPage'])->name('faq');
-            Route::post('/contact',[BookingController::class,'store'])->name('contact.store');
-            Route::get('/availability',[BookingController::class,'availability'])->name('availability');
+            Route::get('/about',[PagesController::class,'aboutPage'])->name('about');
 
         Route::middleware('guest')->group(function () {
             
@@ -64,28 +67,27 @@ use Illuminate\Support\Facades\Route;
             Route::post('/questions/add',[QuestionsController::class,'addquestion'])->name('questions.add');
             Route::post('/question/{question}/delete', [QuestionsController::class, 'deletequestion'])->name('questions.delete');
 
+            Route::get('/feedbacks',[PagesController::class,'feedbacksPage'])->name('feedbacks.page');
+
+            Route::get('/feedback/edit/{feedback}',[PagesController::class,'editFeedbackPage'])->name('feedbacks.edit.page');
+            Route::post('/feedback/edit/{feedback}',[FeedbackController::class,'editFeedback'])->name('feedbacks.edit');
+
+            Route::get('/feedback/add',[PagesController::class,'addFeedbackPage'])->name('feedbacks.add.page');
+            Route::post('/feedback/add',[FeedbackController::class,'addFeedback'])->name('feedbacks.add');
+            Route::post('/feedback/{feedback}/delete', [FeedbackController::class, 'deleteFeedback'])->name('feedbacks.delete');
+
             Route::get('/gallery',[PagesController::class,'galleryPage'])->name('gallery.page');
             Route::post('/gallery/image/{category}',[CategoryController::class,'addImage'])->name('images.add');
             Route::post('/gallery/{categoryImage}/delete', [CategoryController::class, 'deleteCategoryImage'])->name('images.delete');
 
-            Route::get('/homeImage',[PagesController::class,'homeImagePage'])->name('homeImage.page');
-            Route::post('/homeImage/image',[HomeImageController::class,'addHomeImage'])->name('homeImage.add');
-            Route::post('/homeImage/{portfolio}/delete', [HomeImageController::class, 'deleteHomeImage'])->name('homeImage.delete');
-            
             Route::get('/themes',[PagesController::class,'themesPage'])->name('themes.page');
 
             Route::post('/themes/add',[CategoryController::class,'addTheme'])->name('themes.add');
-            Route::post('/themes/{theme}/edit',[CategoryController::class,'editTheme'])->name('themes.edit');
             Route::post('/themes/{theme}/delete', [CategoryController::class, 'deleteTheme'])->name('themes.delete');
 
             Route::get('/account',[PagesController::class,'accountPage'])->name('account.page');
             Route::post('/account/profile',[AccountController::class,'updateProfile'])->name('account.profile');
             Route::post('/account/password',[AccountController::class,'updatePassword'])->name('account.password');
 
-            Route::get('/schedule',[PagesController::class,'schedulePage'])->name('schedule.page');
-
-            Route::get('/bookings',[PagesController::class,'bookingsPage'])->name('bookings.page');
-            Route::post('/bookings/{booking}/status',[BookingController::class,'updateStatus'])->name('bookings.status');
-            Route::post('/bookings/{booking}/reschedule',[BookingController::class,'reschedule'])->name('bookings.reschedule');
         });
         

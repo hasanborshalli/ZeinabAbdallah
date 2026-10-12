@@ -157,19 +157,6 @@ body {
     border-bottom: 1px solid #ece4d8;
 }
 
-.category-icon-badge {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background-color: rgba(175, 134, 86, 0.12);
-    color: var(--admin-gold-dark);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.15rem;
-    flex-shrink: 0;
-}
-
 .admin-table thead th {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -196,16 +183,6 @@ body {
     margin-top: 2rem;
     padding-top: 2rem;
     border-top: 1px solid #ece4d8;
-}
-
-.icon-picker-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.icon-picker-row select {
-    max-width: 320px;
 }
 
 .danger-zone {

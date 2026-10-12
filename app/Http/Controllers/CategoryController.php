@@ -7,6 +7,7 @@ use App\Models\CategoryImage;
 use App\Models\Package;
 use App\Models\Theme;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -16,16 +17,23 @@ class CategoryController extends Controller
         $fields = $request->validate([
             'title' => 'required|string|max:255',
             'title_ar' => 'required|string|max:255',
+            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(-[a-z0-9]+)*$/', Rule::unique('categories', 'slug')],
+            'small_description' => 'nullable|string|max:255',
+            'small_description_ar' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'highlight' => 'nullable|string|max:255',
             'highlight_ar' => 'nullable|string|max:255',
-            'icon' => 'required|string|max:255',
             'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'gift' => 'sometimes|boolean',
             'notes' => 'nullable|array',
             'notes.*.note' => 'nullable|string|max:255',
             'notes.*.note_ar' => 'nullable|string|max:255',
+        ], [
+            'slug.regex' => 'The slug may only contain lowercase letters, numbers, and hyphens (e.g. newborn-sessions).',
         ]);
+
+        $fields['gift'] = $request->boolean('gift');
 
         $notes = $this->cleanNotes($fields['notes'] ?? []);
         unset($fields['notes']);
@@ -45,16 +53,23 @@ class CategoryController extends Controller
         $fields = $request->validate([
             'title' => 'required|string|max:255',
             'title_ar' => 'required|string|max:255',
+            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(-[a-z0-9]+)*$/', Rule::unique('categories', 'slug')->ignore($category->id)],
+            'small_description' => 'nullable|string|max:255',
+            'small_description_ar' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'highlight' => 'nullable|string|max:255',
             'highlight_ar' => 'nullable|string|max:255',
-            'icon' => 'required|string|max:255',
             'main_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'gift' => 'sometimes|boolean',
             'notes' => 'nullable|array',
             'notes.*.note' => 'nullable|string|max:255',
             'notes.*.note_ar' => 'nullable|string|max:255',
+        ], [
+            'slug.regex' => 'The slug may only contain lowercase letters, numbers, and hyphens (e.g. newborn-sessions).',
         ]);
+
+        $fields['gift'] = $request->boolean('gift');
 
         $notes = $this->cleanNotes($fields['notes'] ?? []);
         unset($fields['notes']);
@@ -115,7 +130,6 @@ class CategoryController extends Controller
             'features' => ['nullable', 'array'],
             'features.*.description' => ['nullable', 'string', 'max:255'],
             'features.*.description_ar' => ['nullable', 'string', 'max:255'],
-            'theme_limit' => ['required', 'integer', 'min:0'],
         ]);
 
         $features = $this->cleanFeatures($fields['features'] ?? []);
@@ -143,7 +157,6 @@ class CategoryController extends Controller
             'features' => ['nullable', 'array'],
             'features.*.description' => ['nullable', 'string', 'max:255'],
             'features.*.description_ar' => ['nullable', 'string', 'max:255'],
-            'theme_limit' => ['required', 'integer', 'min:0'],
         ]);
 
         $features = $this->cleanFeatures($fields['features'] ?? []);
@@ -211,23 +224,6 @@ class CategoryController extends Controller
         
         Theme::create($fields);
         return redirect()->route('admin.themes.page')->with('success','Theme added successfully');
-    }
-    public function editTheme(Request $request,Theme $theme)
-    {
-         $fields=$request->validate([
-            'name'=>['required','string','max:255'],
-            'name_ar'=>['required','string','max:255'],
-            'image'=>'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id'=>['required','exists:categories,id']
-        ]);
-         if (isset($fields['image'])) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('/assets/images/themes'), $imageName);
-            $fields['image'] = '/assets/images/themes/' . $imageName;
-        }
-        Theme::update($fields);
-        return redirect()->route('admin.themes.page')->with('success','Theme edited successfully');
     }
     public function deleteTheme(Theme $theme){
         $theme->delete();

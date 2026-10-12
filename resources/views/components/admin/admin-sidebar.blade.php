@@ -22,19 +22,6 @@
                     </li>
                 </ul>
 
-                <p class="text-uppercase text-muted small fw-semibold mb-2 px-2">Bookings</p>
-                <ul class="nav nav-pills flex-column gap-1 mb-4">
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center gap-2 rounded-3 py-2 px-3 {{ request()->routeIs('admin.bookings.page') && !request('status') ? 'active text-white' : 'text-body-secondary' }}"
-                            aria-current="{{ request()->routeIs('admin.bookings.page') && !request('status') ? 'page' : 'false' }}"
-                            href="{{ route('admin.bookings.page') }}">
-                            <i class="bi bi-calendar-week"></i>
-                            <span>Bookings</span>
-                        </a>
-                    </li>
-
-                </ul>
-
                 <p class="text-uppercase text-muted small fw-semibold mb-2 px-2">Catalog</p>
                 <ul class="nav nav-pills flex-column gap-1 mb-4">
                     <li class="nav-item">
@@ -62,14 +49,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center gap-2 rounded-3 py-2 px-3 {{ request()->routeIs('admin.homeImage.*') ? 'active text-white' : 'text-body-secondary' }}"
-                            href="{{ route('admin.homeImage.page') }}"
-                            aria-current="{{ request()->routeIs('admin.homeImage.*') ? 'page' : 'false' }}">
-                            <i class="bi bi-house-heart"></i>
-                            <span>Home Images</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link d-flex align-items-center gap-2 rounded-3 py-2 px-3 {{ request()->routeIs('admin.questions.*') ? 'active text-white' : 'text-body-secondary' }}"
                             href="{{ route('admin.questions.page') }}"
                             aria-current="{{ request()->routeIs('admin.questions.*') ? 'page' : 'false' }}">
@@ -77,18 +56,18 @@
                             <span>FAQ Questions</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2 rounded-3 py-2 px-3 {{ request()->routeIs('admin.feedbacks.*') ? 'active text-white' : 'text-body-secondary' }}"
+                            href="{{ route('admin.feedbacks.page') }}"
+                            aria-current="{{ request()->routeIs('admin.feedbacks.*') ? 'page' : 'false' }}">
+                            <i class="bi bi-chat-quote"></i>
+                            <span>Feedback</span>
+                        </a>
+                    </li>
                 </ul>
 
                 <p class="text-uppercase text-muted small fw-semibold mb-2 px-2">Settings</p>
                 <ul class="nav nav-pills flex-column gap-1">
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center gap-2 rounded-3 py-2 px-3 {{ request()->routeIs('admin.schedule.*') ? 'active text-white' : 'text-body-secondary' }}"
-                            aria-current="{{ request()->routeIs('admin.schedule.*') ? 'page' : 'false' }}"
-                            href="{{ route('admin.schedule.page') }}">
-                            <i class="bi bi-calendar-week"></i>
-                            <span>My Schedule</span>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex align-items-center gap-2 rounded-3 py-2 px-3 {{ request()->routeIs('admin.account.*') ? 'active text-white' : 'text-body-secondary' }}"
                             aria-current="{{ request()->routeIs('admin.account.*') ? 'page' : 'false' }}"

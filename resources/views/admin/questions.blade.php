@@ -4,7 +4,7 @@
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
             <div>
                 <h1 class="admin-page-title h4">FAQ Questions</h1>
-                <p class="text-muted mb-0">Manage the questions and answers shown in the homepage FAQ section.</p>
+                <p class="text-muted mb-0">Manage the questions and answers shown on each session's FAQ section.</p>
             </div>
             <a href="{{ route('admin.questions.add.page') }}" class="btn btn-admin-gold">
                 <i class="bi bi-plus-lg me-1"></i> Add Question
@@ -22,6 +22,10 @@
             <div
                 class="d-flex flex-wrap justify-content-between align-items-start gap-3 py-3 {{ !$loop->last ? 'border-bottom' : '' }}">
                 <div class="pe-3" style="max-width: 720px;">
+                    <span class="badge text-bg-light border mb-2">
+                        <i class="bi bi-collection me-1"></i>
+                        {{ $question->category->title ?? 'Unassigned' }}
+                    </span>
                     <p class="fw-semibold mb-1">{{ $question->question }}</p>
                     <p class="text-muted small mb-1" dir="rtl">{{ $question->question_ar }}</p>
                     <p class="text-muted small mb-0">{{ \Illuminate\Support\Str::limit($question->answer, 140) }}</p>

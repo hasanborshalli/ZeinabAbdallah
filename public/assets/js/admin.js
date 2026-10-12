@@ -89,22 +89,6 @@ function initRescheduleModal() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[data-icon-picker]').forEach(function (select) {
-        var previewId = select.getAttribute('data-icon-picker');
-        var preview = document.getElementById(previewId);
-
-        if (!preview) {
-            return;
-        }
-
-        var updatePreview = function () {
-            preview.className = 'bi ' + select.value;
-        };
-
-        select.addEventListener('change', updatePreview);
-        updatePreview();
-    });
-
     initRepeatableRows({
         addBtnId: 'addNoteRow',
         listId: 'notesList',
@@ -154,6 +138,13 @@ document.addEventListener('DOMContentLoaded', function () {
         formId: 'deleteQuestionForm',
         nameId: 'deleteQuestionName',
         nameAttr: 'data-question-name',
+    });
+
+    initDeleteModal({
+        modalId: 'deleteFeedbackModal',
+        formId: 'deleteFeedbackForm',
+        nameId: 'deleteFeedbackName',
+        nameAttr: 'data-feedback-name',
     });
 
     initRescheduleModal();

@@ -10,6 +10,7 @@ class QuestionsController extends Controller
     public function addquestion(Request $request)
     {
         $fields = $request->validate([
+            'category_id' => 'required|exists:categories,id',
             'question' => 'required|string|max:255',
             'question_ar' => 'required|string|max:255',
             'answer' => 'required|string',
@@ -23,6 +24,7 @@ class QuestionsController extends Controller
     public function editquestion(Request $request, Question $question)
     {
         $fields = $request->validate([
+            'category_id' => 'required|exists:categories,id',
             'question' => 'required|string|max:255',
             'question_ar' => 'required|string|max:255',
             'answer' => 'required|string',

@@ -5,27 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-#[Fillable('name','name_ar','price','duration_min_minutes','duration_max_minutes','category_id','is_active','theme_limit')]
+#[Fillable('name','name_ar','price','duration_min_minutes','duration_max_minutes','category_id','is_active')]
 class Package extends Model
 {
     use SoftDeletes;
-
-    protected function casts(): array
-    {
-        return [
-            'theme_limit' => 'integer',
-        ];
-    }
 
     public function features(){
         return $this->hasMany(Feature::class);
     }
     public function category(){
         return $this->belongsTo(Category::class);
-    }
-
-    public function bookings(){
-        return $this->hasMany(Booking::class);
     }
 
     public function formattedPrice(): string

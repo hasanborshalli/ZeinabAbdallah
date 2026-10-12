@@ -1,7 +1,31 @@
 @php
     $question = $question ?? null;
+    $categories = $categories ?? collect();
     $field = fn (string $name) => old($name, data_get($question, $name, ''));
+    $selectedCategoryId = old('category_id', data_get($question, 'category_id', ''));
 @endphp
+
+<div class="form-section">
+    <p class="form-section-title">Session</p>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="category_id" class="form-label small fw-semibold">Which session is this FAQ for?</label>
+            <select name="category_id" id="category_id" class="form-select" required>
+                <option value="" disabled {{ $selectedCategoryId === '' ? 'selected' : '' }}>Select a session</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" @selected((string) $selectedCategoryId === (string) $category->id)>
+                        {{ $category->title }}
+                    </option>
+                @endforeach
+            </select>
+            <div class="form-text">Each session has its own FAQ list on its session detail page.</div>
+            @error('category_id')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+</div>
 
 <div class="form-section">
     <p class="form-section-title">Question</p>

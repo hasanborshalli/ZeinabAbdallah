@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'ffe29b',
         ]);
 
         $this->call(CategorySeeder::class);
@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NoteSeeder::class);
         $this->call(CategoryImageSeeder::class);
         $this->call(QuestionSeeder::class);
+        $this->call(FeedbackSeeder::class);
     }
 }

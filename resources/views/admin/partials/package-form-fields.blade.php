@@ -59,16 +59,6 @@ $nextFeatureIndex = $existingFeatures ? max(array_keys($existingFeatures)) + 1 :
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-
-        <div class="col-md-4">
-            <label for="theme_limit" class="form-label small fw-semibold">Themes the customer can pick</label>
-            <input type="number" name="theme_limit" id="theme_limit" class="form-control" min="0" step="1"
-                value="{{ old('theme_limit', data_get($package, 'theme_limit', 0)) }}" required>
-            <div class="form-text">Maximum themes selectable when booking this package. 0 = no theme choice.</div>
-            @error('theme_limit')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
     </div>
 </div>
 

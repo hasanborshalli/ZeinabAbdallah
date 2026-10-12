@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'title',
     'title_ar',
+    'slug',
     'description',
     'description_ar',
     'highlight',
     'highlight_ar',
-    'icon',
     'main_image',
-   
+    'small_description',
+    'small_description_ar',
+    'gift'
 ])]
 class Category extends Model
 {
@@ -34,9 +36,9 @@ class Category extends Model
         return $this->hasMany(Theme::class);
     }
 
-    public function bookings()
+    public function questions()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Question::class);
     }
 
     /**

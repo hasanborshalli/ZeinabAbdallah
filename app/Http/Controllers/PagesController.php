@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
 use App\Models\Category;
+use App\Models\Feedback;
 use App\Models\Package;
-use App\Models\Portfolio;
 use App\Models\Question;
 use Illuminate\Http\Request;
 
@@ -13,40 +12,98 @@ class PagesController extends Controller
 {
     public function homePage()
     {
-        $img = fn (string $id, int $w, int $h) => "https://images.unsplash.com/photo-{$id}?auto=format&fit=crop&w={$w}&h={$h}&q=80";
+        $sessions = Category::orderBy('id')->get();
+        $feedbacks = Feedback::orderBy('id', 'desc')->get();
 
-        $heroImage = $img('1555252333-9f8e92e65df9', 1920, 1280);
+        return view('main.home', compact('sessions', 'feedbacks'));
+    }
 
+    public function galleryIndexPage()
+    {
+        // Every session's photos, grouped by session — the full-site gallery
+        // linked from the hero's "View Gallery" button. Sessions with no
+        // photos yet are simply skipped in the view rather than shown empty.
+        // Each session paginates independently (its own ?page_{id}= query
+        // param), since with many photos per category a single flat list
+        // wouldn't scale.
         $sessions = Category::orderBy('id')->get();
 
-        $portfolio = Portfolio::orderBy('id')->get();
+        $sessions->each(function (Category $category) {
+            $category->setRelation('pagedImages', $category->images()
+                ->orderBy('id', 'desc')
+                ->paginate(18, ['*'], 'page_' . $category->id));
+        });
 
-        $finalCtaImage = $img('1522771930-78848d9293e8', 1920, 1000);
-
-        return view('main.home', compact('heroImage', 'sessions', 'portfolio', 'finalCtaImage'));
+        return view('main.gallery', compact('sessions'));
     }
 
-    public function faqPage()
+    public function themesIndexPage()
     {
-        $faqs = Question::orderBy('id')->get();
+        // Same concept as the gallery page, but for themes — every session's
+        // available themes, grouped by session, each paginating on its own.
+        $sessions = Category::orderBy('id')->get();
 
-        return view('main.faq', compact('faqs'));
+        $sessions->each(function (Category $category) {
+            $category->setRelation('pagedThemes', $category->themes()
+                ->orderBy('id')
+                ->paginate(18, ['*'], 'page_' . $category->id));
+        });
+
+        return view('main.themes', compact('sessions'));
     }
 
-    public function catalogPage()
+    public function sessionDetailPage(Category $category)
     {
-        $categories = Category::with([
-            'packages' => function ($query) {
-                $query->where('is_active', true)->orderBy('id')->with(['features' => fn ($q) => $q->orderBy('id')]);
-            },
-            'notes' => fn ($query) => $query->orderBy('id'),
-            'images' => fn ($query) => $query->orderBy('id'),
-            'themes' => fn ($query) => $query->orderBy('id'),
-        ])->orderBy('id')->get();
-
-        return view('main.catalog', [
-            'categories' => $categories,
+        $category->load([
+            'packages' => fn ($q) => $q->where('is_active', true)->orderBy('id')->with(['features' => fn ($q) => $q->orderBy('id')]),
+            'notes' => fn ($q) => $q->orderBy('id'),
+            'images' => fn ($q) => $q->orderBy('id'),
+            // Newest first — the session detail page only previews the last
+            // 4, so "last" needs to mean "most recently added" here.
+            'themes' => fn ($q) => $q->orderBy('id', 'desc'),
         ]);
+
+        $faqs = Question::where('category_id', $category->id)->orderBy('id')->get();
+
+        return view('main.session-detail', compact('category', 'faqs'));
+    }
+
+    public function sessionGalleryPage(Category $category)
+    {
+        $category->load(['images' => fn ($q) => $q->orderBy('id', 'desc')]);
+
+        return view('main.session-gallery', compact('category'));
+    }
+
+    public function sessionThemesPage(Category $category)
+    {
+        $category->load(['themes' => fn ($q) => $q->orderBy('id', 'desc')]);
+
+        return view('main.session-themes', compact('category'));
+    }
+
+    /**
+     * The private, per-session "tell us more" form the photographer sends
+     * over WhatsApp once a booking is confirmed — not a booking form itself
+     * (no date/time, nothing saved), just the shoot-prep questions for that
+     * category. Field set is keyed by Category::bookingTemplate(), same
+     * template key the old booking form used; only 'newborn' has its real
+     * fields built so far, everything else gets a generic fallback for now.
+     */
+    public function sessionInfoFormPage(Category $category)
+    {
+        return view('main.session-form', compact('category'));
+    }
+
+    public function bookingPage(Request $request)
+    {
+        // Optional context carried over from a specific session/package "Book
+        // Now" link, so the WhatsApp message it produces can mention which
+        // one the customer meant, without turning this into a multi-field form.
+        $sessionName = $request->query('session');
+        $packageName = $request->query('package');
+
+        return view('main.booking', compact('sessionName', 'packageName'));
     }
 
     public function loginPage()
@@ -57,19 +114,6 @@ class PagesController extends Controller
     public function dashboardPage()
     {
         $stats = [
-            [
-                'label' => 'Pending Bookings',
-                'value' => Booking::where('status', 'pending')->count(),
-                'icon' => 'bi-hourglass-split',
-            ],
-            [
-                'label' => 'Confirmed This Month',
-                'value' => Booking::where('status', 'confirmed')
-                    ->whereMonth('date', now()->month)
-                    ->whereYear('date', now()->year)
-                    ->count(),
-                'icon' => 'bi-calendar-check',
-            ],
             [
                 'label' => 'Categories',
                 'value' => Category::count(),
@@ -82,12 +126,7 @@ class PagesController extends Controller
             ],
         ];
 
-        $recentBookings = Booking::with(['category', 'package'])
-            ->latest()
-            ->take(5)
-            ->get();
-
-        return view('admin.dashboard', compact('stats', 'recentBookings'));
+        return view('admin.dashboard', compact('stats'));
     }
     public function categoriesPage()
     {
@@ -132,113 +171,37 @@ class PagesController extends Controller
         return view('admin.account');
     }
     public function contactPage(){
-        $categories = Category::orderBy('id')->with([
-            'packages' => fn ($q) => $q->where('is_active', true)->orderBy('id')->with(['features' => fn ($q) => $q->orderBy('id')]),
-            'themes' => fn ($q) => $q->orderBy('id'),
-        ])->get();
-
-        return view('main.contact', compact('categories'));
+        return view('main.contact');
     }
-    public function bookingsPage(Request $request){
-        $status = $request->query('status');
-        $old = $request->boolean('old');
-
-        $query = Booking::with(['category', 'package', 'themes']);
-
-        if ($old) {
-            $query->whereDate('date', '<', now()->toDateString());
-        } elseif ($status === 'pending') {
-            $query->where('status', 'pending');
-        } elseif ($status === 'confirmed') {
-            $query->where('status', 'confirmed');
-        } elseif ($status === 'declined_cancelled') {
-            $query->whereIn('status', ['declined', 'cancelled']);
-        }
-
-        $bookings = $query->get();
-
-        // Each status group sorts by a different column, and the closed-off
-        // group (declined/cancelled) sorts the opposite direction from the
-        // other two — not something a single SQL ORDER BY can express cleanly,
-        // so it's sorted here instead. The bookings list for one studio is
-        // small enough that this costs nothing in practice.
-        $sessionKey = fn (Booking $b) => $b->date->format('Y-m-d') . ' ' . $b->start_time;
-
-        if ($old) {
-            $bookings = $bookings->sortByDesc($sessionKey)->values();
-        } elseif ($status === 'pending') {
-            $bookings = $bookings->sortBy('created_at')->values();
-        } elseif ($status === 'confirmed') {
-            $bookings = $bookings->sortBy($sessionKey)->values();
-        } elseif ($status === 'declined_cancelled') {
-            $bookings = $bookings->sortByDesc('updated_at')->values();
-        } else {
-            $groupRank = fn (Booking $b) => match ($b->status) {
-                'pending' => 0,
-                'confirmed' => 1,
-                default => 2,
-            };
-
-            $bookings = $bookings->sort(function (Booking $a, Booking $b) use ($groupRank, $sessionKey) {
-                $rankA = $groupRank($a);
-                $rankB = $groupRank($b);
-
-                if ($rankA !== $rankB) {
-                    return $rankA <=> $rankB;
-                }
-
-                return match ($rankA) {
-                    0 => $a->created_at <=> $b->created_at,
-                    1 => $sessionKey($a) <=> $sessionKey($b),
-                    default => $b->updated_at <=> $a->updated_at,
-                };
-            })->values();
-        }
-
-        return view('admin.bookings', [
-            'bookings' => $bookings,
-            'activeStatus' => $old ? 'old' : ($status ?: null),
-            'counts' => [
-                'all' => Booking::count(),
-                'pending' => Booking::where('status', 'pending')->count(),
-                'confirmed' => Booking::where('status', 'confirmed')->count(),
-                'declined_cancelled' => Booking::whereIn('status', ['declined', 'cancelled'])->count(),
-                'old' => Booking::whereDate('date', '<', now()->toDateString())->count(),
-            ],
-        ]);
-    }
-    public function homeImagePage(){
-       $images=Portfolio::latest()->get();
-       return view('admin.home-images',compact('images'));
-    }
-    public function schedulePage(){
-        $bookings = Booking::with(['category', 'package'])
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->get();
-
-        $events = $bookings->map(function (Booking $booking) {
-            $start = \Carbon\Carbon::parse($booking->date->format('Y-m-d') . ' ' . $booking->start_time);
-
-            return [
-                'title' => $booking->full_name . ' · ' . $booking->category->title,
-                'start' => $start->toIso8601String(),
-                'end' => $start->copy()->addMinutes($booking->duration_minutes)->toIso8601String(),
-                'color' => $booking->status === 'confirmed' ? '#4b8b6f' : '#c58a3d',
-            ];
-        })->values();
-
-        return view('admin.schedule', compact('events'));
+    public function aboutPage(){
+        return view('main.about');
     }
     public function editquestionPage(Question $question){
-        return view('admin.question-edit',compact('question'));
+        $categories = Category::orderBy('title')->get();
+
+        return view('admin.question-edit',compact('question', 'categories'));
     }
     public function addquestionPage(){
-        return view('admin.question-add');
+        $categories = Category::orderBy('title')->get();
+
+        return view('admin.question-add',compact('categories'));
     }
     public function questionPage(){
-        $questions=Question::latest()->get();
+        $questions=Question::with('category')->latest()->get();
         return view('admin.questions',compact('questions'));
     }
-    
+
+    public function feedbacksPage(){
+        $feedbacks = Feedback::latest()->get();
+        return view('admin.feedbacks', compact('feedbacks'));
+    }
+
+    public function addFeedbackPage(){
+        return view('admin.add-feedback');
+    }
+
+    public function editFeedbackPage(Feedback $feedback){
+        return view('admin.edit-feedback', compact('feedback'));
+    }
 
 }

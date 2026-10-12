@@ -22,7 +22,6 @@ class CategorySeeder extends Seeder
                 'description_ar' => 'جلسات هادئة وغير مستعجلة لتوثيق أولى أيام طفلك.',
                 'highlight' => 'Reel included for an extra $50 · All photos delivered by link',
                 'highlight_ar' => 'ريل بإضافة 50$ · جميع الصور تُسلَّم عبر رابط',
-                'icon' => 'bi-moon-stars-fill',
                 'main_image' => $img('1544126592-807ade215a0b', 800, 800),
             ],
             [
@@ -32,7 +31,6 @@ class CategorySeeder extends Seeder
                 'description_ar' => 'جلسات استوديو مرحة تحتفي بشخصية طفلك المتنامية.',
                 'highlight' => 'Phone reel included · All photos delivered by link',
                 'highlight_ar' => 'ريل هاتف مشمول · جميع الصور تُسلَّم عبر رابط',
-                'icon' => 'bi-cake2',
                 'main_image' => $img('1522771930-78848d9293e8', 800, 800),
             ],
             [
@@ -42,7 +40,6 @@ class CategorySeeder extends Seeder
                 'description_ar' => 'ديكور استوديو متكامل للاحتفال بكل شمعة وإنجاز صغير.',
                 'highlight' => 'Phone reel included · All photos delivered by link',
                 'highlight_ar' => 'ريل هاتف مشمول · جميع الصور تُسلَّم عبر رابط',
-                'icon' => 'bi-balloon-heart-fill',
                 'main_image' => $img('1607453998774-d533f65dac99', 800, 800),
             ],
             [
@@ -52,7 +49,6 @@ class CategorySeeder extends Seeder
                 'description_ar' => 'لحظات عائلية خالدة — صور دافئة لمن تحبين.',
                 'highlight' => 'Phone reel included · All photos delivered by link',
                 'highlight_ar' => 'ريل هاتف مشمول · جميع الصور تُسلَّم عبر رابط',
-                'icon' => 'bi-stars',
                 'main_image' => $img('1476234251651-f353703a034d', 800, 800),
             ],
             [
@@ -62,7 +58,6 @@ class CategorySeeder extends Seeder
                 'description_ar' => 'احتفلي باللحظة الكبرى بديكور استوديو أنيق.',
                 'highlight' => 'All photos delivered by link',
                 'highlight_ar' => 'جميع الصور تُسلَّم عبر رابط',
-                'icon' => 'bi-heart-fill',
                 'main_image' => $img('1530103862676-de8c9debad1d', 800, 800),
             ],
         ];
