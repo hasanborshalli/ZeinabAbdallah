@@ -55,7 +55,7 @@
     </div>
 
     <script src="/assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/main.js?v=1"></script>
 
     {{ $scripts ?? '' }}
 </body>
