@@ -33,6 +33,18 @@
                             <img src="{{ $theme->image }}" alt="{{ $tr($theme, 'name') }}" loading="lazy"
                                 data-lightbox>
                             <span class="sd-theme-chip-name">{{ $tr($theme, 'name') }}</span>
+
+                            <button type="button" class="sd-theme-add" data-theme-toggle aria-pressed="false"
+                                data-url="{{ route('sessions.themes.toggle', [$category->slug, $theme->id]) }}">
+                                <span class="sd-theme-add-off">
+                                    <i class="bi bi-bag-plus"></i>
+                                    {{ __('site.session_themes.add') }}
+                                </span>
+                                <span class="sd-theme-add-on">
+                                    <i class="bi bi-check-lg"></i>
+                                    {{ __('site.session_themes.added') }}
+                                </span>
+                            </button>
                         </li>
                     @endforeach
                 </ul>
@@ -41,5 +53,16 @@
             @endif
         </div>
     </section>
+
+    @if ($category->themes->isNotEmpty())
+        <div class="st-send-wrap">
+            <a href="{{ route('sessions.form', $category->slug) }}" class="st-send-bar is-disabled"
+                data-themes-send aria-disabled="true">
+                <span class="st-send-count" data-themes-count>0</span>
+                {{ __('site.session_themes.send') }}
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    @endif
 
 </x-layout>

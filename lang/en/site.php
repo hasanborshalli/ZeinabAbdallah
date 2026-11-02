@@ -195,6 +195,9 @@ return [
         'heading_accent' => 'Themes',
         'intro' => 'Every theme available for this session, in one place.',
         'empty' => 'No themes have been added for this session yet. Check back soon.',
+        'add' => 'Add',
+        'added' => 'Added',
+        'send' => 'Send Themes',
     ],
 
     'session_form' => [
@@ -206,21 +209,10 @@ return [
         'status_sent' => 'Your details are ready in WhatsApp — press send to deliver them.',
         'message_intro' => ':session — Session Details',
 
-        'full_name' => 'Full Name',
-        'phone' => 'Phone Number',
-
-        'baby_name' => 'Baby\'s Name',
-        'baby_age' => 'How old is your baby?',
-        'baby_age_placeholder' => 'e.g. 10 days',
-        'dress_label' => 'What outfit or wrap would you like?',
-        'dress_placeholder' => 'Describe your preferred style, colors, or theme outfit',
-        'social_label' => 'May we share your photos on our social media?',
-        'social_yes' => 'Yes',
-        'social_no' => 'No',
+        'themes_heading' => 'Your Selected Themes',
+        'themes_label' => 'Selected Themes',
 
         'generic_notice' => 'The detailed form for this session is still being put together — for now, just share anything you\'d like us to know and we\'ll take it from there.',
-        'generic_notes_label' => 'Anything you\'d like us to know?',
-        'generic_notes_placeholder' => 'Tell us about your session, preferences, or questions',
     ],
 
     'booking' => [

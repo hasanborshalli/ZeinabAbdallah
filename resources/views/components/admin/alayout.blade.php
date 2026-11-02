@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Youphoto admin panel" />
     <title>{{ $title ?? 'Admin Dashboard' }} · Youphoto</title>
-    <link rel="icon" href="/assets/images/zeinab_abdallah_logo.jpg">
+    <link rel="icon" href="/assets/images/zeinab_abedallah_logo.png">
     <link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <meta name="theme-color" content="#af8656" />

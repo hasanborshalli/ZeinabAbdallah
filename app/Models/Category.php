@@ -44,7 +44,7 @@ class Category extends Model
     /**
      * Which booking-form question set this category uses. Matched by title
      * keyword rather than ID, since the actual set of categories is fixed by
-     * the business (newborn/baby/birthday/family/gender reveal) regardless of
+     * the business (newborn/baby/birthday/family/gender reveal/maternity) regardless of
      * what order they were created in or how their titles get edited around
      * that keyword. Anything unrecognized falls back to the generic template.
      * Single source of truth for both the contact form and BookingController.
@@ -59,6 +59,7 @@ class Category extends Model
             str_contains($title, 'birthday') => 'birthday',
             str_contains($title, 'family') => 'family',
             str_contains($title, 'gender') => 'gender_reveal',
+            str_contains($title, 'maternity') => 'maternity',
             default => 'generic',
         };
     }

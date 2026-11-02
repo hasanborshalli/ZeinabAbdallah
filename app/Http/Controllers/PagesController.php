@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Feedback;
 use App\Models\Package;
 use App\Models\Question;
+use App\Models\Theme;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -79,7 +80,29 @@ class PagesController extends Controller
     {
         $category->load(['themes' => fn ($q) => $q->orderBy('id', 'desc')]);
 
+        // Every visit starts a fresh selection — the cart only lives for one
+        // pass through themes → form.
+        session()->forget('themes_ordered');
+
         return view('main.session-themes', compact('category'));
+    }
+
+    /**
+     * Adds or removes a theme from the customer's selection. Stored as a
+     * set of theme ids, so a theme can only ever be in it once.
+     */
+    public function toggleThemeOrder(Category $category, Theme $theme)
+    {
+        $ordered = session('themes_ordered', []);
+        $added = !in_array($theme->id, $ordered, true);
+
+        $ordered = $added
+            ? [...$ordered, $theme->id]
+            : array_values(array_diff($ordered, [$theme->id]));
+
+        session(['themes_ordered' => $ordered]);
+
+        return response()->json(['added' => $added, 'count' => count($ordered)]);
     }
 
     /**
@@ -92,7 +115,14 @@ class PagesController extends Controller
      */
     public function sessionInfoFormPage(Category $category)
     {
-        return view('main.session-form', compact('category'));
+        // Themes picked on this session's themes page, if any — scoped to the
+        // category so stale ids from another session never leak in.
+        $orderedThemes = $category->themes()
+            ->whereIn('id', session('themes_ordered', []))
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('main.session-form', compact('category', 'orderedThemes'));
     }
 
     public function bookingPage(Request $request)

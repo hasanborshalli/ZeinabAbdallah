@@ -98,7 +98,7 @@ footer[id] {
 }
 
 /* =========================================================
-   Logo (text-based brand mark — no logo image)
+   Logo
    ========================================================= */
 .site-flourish {
     display: block;
@@ -109,55 +109,24 @@ footer[id] {
 
 .site-logo {
     display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
     line-height: 1;
 }
 
-.site-logo .site-flourish {
-    margin-bottom: 0.15rem;
-}
-
-.site-logo-name {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    line-height: 1;
-    letter-spacing: 0.08em;
-    color: var(--color-ink);
-}
-
-.site-logo-sub {
+/* Height matches the old text mark, so .site-navbar-spacer still fits. */
+.site-logo-img {
     display: block;
-    margin-top: 0.25rem;
-    font-size: 0.5rem;
-    font-weight: 300;
-    text-transform: uppercase;
-    line-height: 1;
-    letter-spacing: 0.28em;
-    color: var(--color-muted);
+    width: auto;
+    height: 3.25rem;
 }
 
-@media (min-width: 640px) {
-    .site-logo-name {
-        font-size: 1.5rem;
-    }
-
-    .site-logo-sub {
-        font-size: 0.6rem;
+@media (min-width: 992px) {
+    .site-logo-img {
+        height: 3.75rem;
     }
 }
 
-.site-logo-light .site-logo-name {
-    color: var(--color-white);
-}
-
-.site-logo-light .site-logo-sub {
-    color: var(--color-sand);
-}
-
-.site-logo-light .site-flourish {
-    color: var(--color-sand);
+.site-footer-logo .site-logo-img {
+    height: 5rem;
 }
 
 /* =========================================================
@@ -1978,7 +1947,10 @@ body.lang-ar .contact-info-card--link:hover .contact-chevron {
     color: var(--color-taupe-dark);
     font-size: 1.1rem;
     cursor: pointer;
-    transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+    transition:
+        background-color var(--transition),
+        color var(--transition),
+        border-color var(--transition);
 }
 
 .feedbacks-slider-arrow:hover,
@@ -2838,6 +2810,213 @@ body.lang-ar .contact-info-card--link:hover .contact-chevron {
     background: linear-gradient(0deg, rgba(20, 17, 14, 0.75), transparent);
 }
 
+/* --- Theme "cart" (session themes page) --- */
+.sd-theme-chip::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 0 var(--color-taupe);
+    pointer-events: none;
+    transition: box-shadow 0.25s ease-out;
+}
+
+.sd-theme-chip.is-added::after {
+    box-shadow: inset 0 0 0 3px var(--color-taupe);
+}
+
+.sd-theme-add {
+    position: absolute;
+    top: 0.5rem;
+    inset-inline-end: 0.5rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    border-radius: var(--radius-pill);
+    background-color: rgba(255, 255, 255, 0.92);
+    padding: 0.35rem 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    box-shadow: 0 4px 12px rgba(20, 17, 14, 0.18);
+    cursor: pointer;
+    transition:
+        background-color var(--transition),
+        color var(--transition);
+}
+
+.sd-theme-add:hover {
+    background-color: var(--color-white);
+}
+
+.sd-theme-add:disabled {
+    cursor: progress;
+}
+
+.sd-theme-add > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.sd-theme-add-on,
+.sd-theme-chip.is-added .sd-theme-add-off {
+    display: none !important;
+}
+
+.sd-theme-chip.is-added .sd-theme-add-on {
+    display: inline-flex !important;
+}
+
+.sd-theme-chip.is-added .sd-theme-add {
+    background-color: var(--color-taupe);
+    color: var(--color-white);
+}
+
+.sd-theme-add.is-popping {
+    animation: theme-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sd-theme-add.is-shaking {
+    animation: theme-shake 0.4s ease-in-out;
+}
+
+.sd-theme-fly {
+    position: absolute;
+    top: 0.9rem;
+    inset-inline-end: 1.4rem;
+    z-index: 3;
+    font-size: 1.1rem;
+    color: var(--color-rose);
+    pointer-events: none;
+    animation: theme-fly 0.9s ease-out forwards;
+}
+
+@keyframes theme-pop {
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.18);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes theme-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-4px);
+    }
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes theme-fly {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.6);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(-4px) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-48px) scale(0.9);
+    }
+}
+
+/* Sticky "Send Themes" bar — sticks to the viewport bottom while scrolling
+   the grid, then settles at the end of <main> above the footer. */
+.st-send-wrap {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    background: linear-gradient(
+        0deg,
+        var(--color-cream) 60%,
+        rgba(250, 246, 241, 0)
+    );
+}
+
+.st-send-bar {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-taupe);
+    padding: 1rem 2rem;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--color-white);
+    text-decoration: none;
+    box-shadow: 0 10px 24px rgba(138, 108, 80, 0.3);
+    transition:
+        background-color var(--transition),
+        opacity var(--transition),
+        transform var(--transition);
+}
+
+.st-send-bar:hover {
+    background-color: var(--color-taupe-dark);
+    color: var(--color-white);
+}
+
+.st-send-bar.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+[dir="rtl"] .st-send-bar .bi-arrow-right {
+    transform: scaleX(-1);
+}
+
+.st-send-count {
+    display: inline-flex;
+    min-width: 1.6rem;
+    height: 1.6rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background-color: var(--color-white);
+    padding-inline: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-taupe-dark);
+}
+
+.st-send-count.is-bumping {
+    animation: theme-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Selected themes recap on the session form */
+.sf-themes-list {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+@media (min-width: 576px) {
+    .sf-themes-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 .sd-notes-section {
     padding-block: 3.5rem;
 }
@@ -3269,6 +3448,27 @@ body.lang-ar .contact-info-card--link:hover .contact-chevron {
 
 .sf-radio input {
     accent-color: var(--color-taupe);
+}
+
+.sf-radio-stack {
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.sf-other-input {
+    margin-top: 0.75rem;
+}
+
+.sf-section-title {
+    margin: 2.25rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-sand);
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-taupe-dark);
 }
 
 .sf-generic-notice {

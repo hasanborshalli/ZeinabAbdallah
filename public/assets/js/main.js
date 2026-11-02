@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initSiteNav();
     initSimpleBookingForm();
     initSessionInfoForm();
+    initThemeCart();
     initLightbox();
     initFeedbacksSlider();
 });
@@ -63,6 +64,97 @@ function initSessionInfoForm() {
             status.textContent = status.dataset.sentText;
         }
     });
+}
+
+// Session themes page "cart" — each [data-theme-toggle] adds/removes its theme
+// from session('themes_ordered') on the server, and the sticky "Send Themes"
+// bar carries the customer on to that session's form once at least one is in.
+function initThemeCart() {
+    var toggles = document.querySelectorAll('[data-theme-toggle]');
+    if (!toggles.length) {
+        return;
+    }
+
+    var tokenMeta = document.querySelector('meta[name="csrf-token"]');
+    var token = tokenMeta ? tokenMeta.content : '';
+    var sendBar = document.querySelector('[data-themes-send]');
+    var countBadge = document.querySelector('[data-themes-count]');
+
+    // Restarts a one-shot CSS animation class even if it's already applied.
+    var replay = function (el, className) {
+        el.classList.remove(className);
+        void el.offsetWidth;
+        el.classList.add(className);
+    };
+
+    var updateSendBar = function (count) {
+        if (countBadge) {
+            countBadge.textContent = count;
+            replay(countBadge, 'is-bumping');
+        }
+        if (sendBar) {
+            sendBar.classList.toggle('is-disabled', count === 0);
+            sendBar.setAttribute('aria-disabled', count === 0 ? 'true' : 'false');
+        }
+    };
+
+    var flyFrom = function (chip) {
+        var heart = document.createElement('i');
+        heart.className = 'bi bi-heart-fill sd-theme-fly';
+        heart.setAttribute('aria-hidden', 'true');
+        heart.addEventListener('animationend', function () {
+            heart.remove();
+        });
+        chip.appendChild(heart);
+    };
+
+    toggles.forEach(function (button) {
+        var chip = button.closest('.sd-theme-chip');
+
+        button.addEventListener('click', function () {
+            if (button.disabled) {
+                return;
+            }
+            button.disabled = true;
+
+            fetch(button.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json',
+                },
+            })
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('Request failed');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    chip.classList.toggle('is-added', data.added);
+                    button.setAttribute('aria-pressed', data.added ? 'true' : 'false');
+                    replay(button, 'is-popping');
+                    if (data.added) {
+                        flyFrom(chip);
+                    }
+                    updateSendBar(data.count);
+                })
+                .catch(function () {
+                    replay(button, 'is-shaking');
+                })
+                .finally(function () {
+                    button.disabled = false;
+                });
+        });
+    });
+
+    if (sendBar) {
+        sendBar.addEventListener('click', function (event) {
+            if (sendBar.classList.contains('is-disabled')) {
+                event.preventDefault();
+            }
+        });
+    }
 }
 
 // Any <img data-lightbox> on the page opens full-size in the shared overlay
