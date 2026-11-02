@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login · Youphoto</title>
-    <link rel="icon" href="/assets/images/zeinab_abdallah_logo.jpg">
+    <link rel="icon" href="/assets/images/zeinab_abedallah_logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
     <div style="width: 100%; max-width: 400px;">
 
         <div class="text-center mb-4">
-            <img src="/assets/images/zeinab_abdallah_logo.jpg" alt="Youphoto" style="height: 64px; border-radius: 50%; object-fit: cover;">
+            <img src="/assets/images/zeinab_abedallah_logo_mark.png" alt="Zeinab Abdallah" style="height: 80px;">
             <h1 class="font-heading mt-3 mb-1" style="font-size: 1.6rem;">Youphoto</h1>
             <p class="mb-0" style="color: var(--color-muted); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;">Admin Login</p>
         </div>

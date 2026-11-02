@@ -1,6 +1,6 @@
 <header class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow sticky-top px-3">
     <a class="navbar-brand fs-6 text-dark fw-semibold lh-sm d-flex align-items-center gap-2" href="{{ route('admin.dashboard') }}">
-        <img src="/assets/images/zeinab_abdallah_logo.jpg" alt="Youphoto" height="28" class="rounded-circle">
+        <img src="/assets/images/zeinab_abedallah_logo_mark.png" alt="Zeinab Abdallah" height="32">
         Youphoto Admin
     </a>
     <div class="ms-auto d-none d-md-flex align-items-center">

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
             Route::get('/sessions/{category:slug}',[PagesController::class,'sessionDetailPage'])->name('sessions.show');
             Route::get('/sessions/{category:slug}/gallery',[PagesController::class,'sessionGalleryPage'])->name('sessions.gallery');
             Route::get('/sessions/{category:slug}/themes',[PagesController::class,'sessionThemesPage'])->name('sessions.themes');
+            Route::post('/sessions/{category:slug}/themes/{theme}/toggle',[PagesController::class,'toggleThemeOrder'])->scopeBindings()->name('sessions.themes.toggle');
             Route::get('/sessions/{category:slug}/form',[PagesController::class,'sessionInfoFormPage'])->name('sessions.form');
             Route::get('/booking',[PagesController::class,'bookingPage'])->name('booking');
             Route::get('/contact',[PagesController::class,'contactPage'])->name('contact');
